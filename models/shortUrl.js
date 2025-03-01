@@ -1,23 +1,24 @@
-const mongoose = require('mongoose')
-const shortId = require('shortid')
+import mongoose from 'mongoose';
+import shortId from 'shortid';
 
 // Schema
 
 const shortUrlSchema = new mongoose.Schema({
-    full:{
-        type: String,
-        required: true,
-    },
-    short:{
-        type: String,
-        required: true,
-        default: shortId.generate
-    },
-    numClicks:{
-        type: Number,
-        required: true,
-        default: 0,
-    }
-})
+  full: {
+    type: String,
+    required: true,
+  },
+  short: {
+    type: String,
+    required: true,
+    default: shortId.generate,
+  },
+  numClicks: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+});
 
-module.exports = mongoose.model('ShortUrl', shortUrlSchema)
+// Use export default for ES module syntax
+export default mongoose.model('ShortUrl', shortUrlSchema);

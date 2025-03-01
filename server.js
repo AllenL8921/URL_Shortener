@@ -1,42 +1,31 @@
-const express = require('express')
-const mongoose = require('mongoose')
+// server.js
+import express from 'express';
+import mongoose from 'mongoose';
 
-const ShortUrl = require('./models/shortUrl');
+// Import routers
+import shortUrlRouter from './controllers/shortUrlController.js';
 
-const app = express()
+const app = express();
 
 // Connect to DB
-mongoose.connect('mongodb://localhost/urlShortener', {
+mongoose
+  .connect('mongodb://localhost/urlShortener', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((err) => console.log('MongoDB connection error:', err));
+
+// Use imported routes
+app.use('/', shortUrlRouter);
+
+// Set up EJS as the view engine
+app.set('view engine', 'ejs');
+
+// Middleware for parsing URL-encoded data
+app.use(express.urlencoded({ extended: false }));
+
+// Start the server
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`Server running on port ${process.env.PORT || 5000}`);
 });
-
-
-app.set('view engine', 'ejs')
-app.use(express.urlencoded({extended: false}))
-
-app.get('/', async (req, res) => {
-    const shortUrls = await ShortUrl.find()
-    res.render('index', { shortUrls : shortUrls})
-})
-
-app.post('/shortURLS', async (req, res) => {
-    await ShortUrl.create({full : req.body.fullURL})
-
-    res.redirect('/')
-})
-
-app.get('/:shortUrl', async (req, res)=>{
-    const shortUrl = await ShortUrl.findOne({short: req.params.shortUrl});
-
-    if(shortUrl == null){
-        return res.sendStatus(404);
-    }
-
-    shortUrl.numClicks++;
-    shortUrl.save();
-
-    res.redirect(shortUrl.full);
-})
-
-app.listen(process.env.PORT || 5000);
