@@ -2,6 +2,8 @@
 
 A simple URL shortener application built using Node.js, Express, and MongoDB. This app allows users to shorten long URLs and access them via a short alias. It tracks the number of clicks for each short URL.
 
+![URLShrinker](assets/URL_Shrinker.png)
+
 ## Features
 
 - Shorten long URLs and store them in a MongoDB database.
